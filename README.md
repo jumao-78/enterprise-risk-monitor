@@ -34,6 +34,8 @@
 
 ### 界面预览
 
+六个一级页签 + 移动端，均为原型实机截图（1440×900 / 390×844）。
+
 **总览** —— 4 张 KPI（监测企业 / 风险记录 / 重点风险 / 应分析）+ 今日取数四段流水线 + 近七日趋势
 
 ![总览](docs/screenshots/overview.png)
@@ -42,9 +44,27 @@
 
 ![风险明细](docs/screenshots/detail.png)
 
-**移动端** —— 同一份数据在 390px 宽度下的重排，取数链路与演示标识一并保留
+**取数任务** —— 双源并行取数，每个数据源独立呈现成功 / 部分完成 / 无权限 / 失败，附任务历史与重试次数
 
-<img src="docs/screenshots/mobile.png" width="300" alt="移动端总览" />
+![取数任务](docs/screenshots/tasks.png)
+
+**AI 与邮件** —— AI 分析归档（可查看产出文件路径）+ 邮件发送记录，主题统一带 `[演示]` 前缀、正文带快照声明
+
+![AI 与邮件](docs/screenshots/ai.png)
+
+**配置** —— 数据来源只读展示 + AI / 邮件参数 + 企业名单维护；API Key 与授权码默认掩码，需显式点击才显示
+
+![配置](docs/screenshots/config.png)
+
+**系统设置** —— 定时任务、6 项系统自检（含"企查查登录态失效"这类真实异常原样暴露）、文件维护与保留策略
+
+![系统设置](docs/screenshots/setting.png)
+
+**移动端** —— 390px 宽度重排：总览与风险明细保留完整信息层级，演示标识不因窄屏被折叠
+
+| 总览 | 风险明细 |
+|---|---|
+| <img src="docs/screenshots/mobile.png" width="260" alt="移动端总览" /> | <img src="docs/screenshots/mobile-detail.png" width="260" alt="移动端风险明细" /> |
 
 
 ---
@@ -120,6 +140,7 @@ API 层
 ├── dist/  dist-mobile/         # 打包后的分发版本
 ├── 企业风险监测_原型汇总.html    # 单文件演示包（6 页签合一，零依赖）
 ├── PRD/                        # PRD v1.0（md / docx / pdf）
+├── docs/screenshots/           # 界面截图（6 页签 + 移动端，README 预览用）
 ├── data_static/                # 取数快照（credit_china_2026-10-21.json）
 ├── 企业名单_真实.csv            # 25 家（来源：地方发改委公示）
 ├── 企业名单_演示.csv            # 20 家（脱敏演示集）
