@@ -1,0 +1,54 @@
+# ============================================================
+# 企业风险监测系统 · 版本控制忽略规则
+# 原则：密钥与本地运行态一律不入库；开发期临时产物不入库
+# ============================================================
+
+# ---- 1. 本地密钥与私有配置（务必保留此规则） ----
+config.local.json
+config.local.json.bak
+config.local.json.*
+*.local.json
+
+# ---- 2. 运行时数据与缓存 ----
+data/
+__pycache__/
+*.py[cod]
+*.log
+node_modules/
+.pytest_cache/
+
+# ---- 3. Agent / 编辑器 / 工具链 ----
+.workbuddy/
+.rivet
+.rivet.md
+.wbapp_*.genie
+.vscode/
+.idea/
+AGENTS.md
+
+# ---- 4. 开发期临时目录（截图、探针、备份、草稿） ----
+_audit/
+_tools/
+_bak/
+_slides/
+_skills/
+_design/
+PRD/_build/
+*.bak
+
+# ---- 5. 一次性探针与中间产物（保留可复现的构建/取数脚本） ----
+_probe_*.py
+_verify_llm.py
+_tpl_dump.py
+_dump_ppt.py
+_query_wuhai.py
+_match_wuhai.py
+_fetch_rest2.py
+_ppt_dump.txt
+_cc_home*.png
+_cm.js
+
+# ---- 6. 系统文件 ----
+Thumbs.db
+.DS_Store
+desktop.ini

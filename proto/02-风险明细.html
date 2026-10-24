@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企业风险监测 · 风险明细</title>
+<style>
+:root{
+  --sans:"Inter","Segoe UI Variable Text","Segoe UI","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  --bg:#F5F6F8; --card:#FFFFFF;
+  --line:#EDEFF3; --line-2:#E3E6EB;
+  --text:#16181D; --text-2:#5B6270; --text-3:#8A9099; --text-4:#AAB0B9;
+  --shadow:0 1px 2px rgba(17,24,39,.04);
+  --green:#17803D; --green-bg:#E9F7EF;
+  --red:#C2261B;   --red-bg:#FDECEC;
+  --amber:#B45309; --amber-bg:#FEF4E6;
+  --gray-bg:#F3F4F6;
+  --lv-h:#C0483B; --lv-m:#D2913F; --lv-l:#8CA3B8; --lv-0:#D8DEE6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{scrollbar-width:none; -ms-overflow-style:none}
+::-webkit-scrollbar{width:0;height:0}
+body{background:var(--bg); color:var(--text); font-family:var(--sans); font-size:13px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; font-variant-numeric:tabular-nums}
+button{font-family:inherit; color:inherit}
+.app{display:flex; min-height:100vh}
+
+/* 侧栏 */
+.side{width:228px; flex:0 0 228px; background:var(--card); border-right:1px solid var(--line);
+  padding:13px 11px; display:flex; flex-direction:column; position:sticky; top:0; height:100vh}
+.brand{display:flex; align-items:center; gap:9px; padding:5px 8px 14px}
+.brand .mark{width:26px;height:26px;border-radius:7px;background:#16181D;display:grid;place-items:center}
+.brand .name{font-size:13.5px; font-weight:600; letter-spacing:-.01em}
+.grp{font-size:11.5px; color:var(--text-4); padding:9px 9px 5px}
+.nav{display:flex; flex-direction:column; gap:1px}
+.item{display:flex; align-items:center; gap:9px; height:32px; padding:0 9px; border-radius:7px;
+  color:var(--text-2); font-size:12.5px; cursor:pointer; text-decoration:none; user-select:none}
+.item svg{flex:0 0 16px; color:var(--text-3)}
+.item:hover{background:#F7F8FA; color:var(--text)}
+.item.on{background:#F2F3F5; color:var(--text); font-weight:500}
+.item.on svg{color:var(--text)}
+.item .dot{margin-left:auto; width:6px;height:6px;border-radius:50%}
+.d-ok{background:#22A45D} .d-part{background:#E29A2D} .d-wait{background:#C6CAD1}
+.side-foot{margin-top:auto; padding-top:8px}
+.srcs{display:flex; flex-direction:column; gap:1px}
+.srcrow{display:flex; align-items:center; gap:9px; height:28px; padding:0 9px; font-size:12px; color:var(--text-2)}
+.srcrow .sq{width:7px;height:7px;border-radius:2px;flex:0 0 7px}
+.srcrow span{margin-left:auto; font-size:11px; color:var(--text-4)}
+.demo-card{border:1px solid #F3E3C8; background:#FFFCF6; border-radius:9px; padding:9px 10px; margin:12px 0 10px}
+.demo-card .t{display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:var(--amber)}
+.demo-card .t i{width:6px;height:6px;border-radius:50%;background:#E29A2D}
+.demo-card p{margin:4px 0 0; font-size:11px; color:var(--text-3); line-height:1.55}
+.demo-card a{display:inline-block;margin-top:5px;font-size:11px;color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--line-2)}
+.user{display:flex; align-items:center; gap:9px; padding:9px 5px 3px; border-top:1px solid var(--line)}
+.user .av{width:26px;height:26px;border-radius:50%;background:#E9EBEF;display:grid;place-items:center;font-size:11px;color:var(--text-2)}
+.user .nm{font-size:12px; font-weight:500; line-height:1.3}
+.user .em{font-size:10.5px; color:var(--text-4); line-height:1.3}
+
+/* 顶栏 */
+.main{flex:1; min-width:0; display:flex; flex-direction:column}
+.top{height:54px; flex:0 0 54px; background:var(--card); border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:12px; padding:0 22px; position:sticky; top:0; z-index:30}
+.crumb{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-3)}
+.crumb b{color:var(--text); font-weight:500}
+.top .right{margin-left:auto; display:flex; align-items:center; gap:9px}
+.search{display:flex; align-items:center; gap:7px; height:32px; width:238px;
+  border:1px solid var(--line-2); border-radius:8px; padding:0 10px; color:var(--text-4); background:var(--card)}
+.search input{border:0; outline:0; background:none; font:inherit; color:var(--text); width:100%}
+.search input::placeholder{color:var(--text-4)}
+.icon-btn{width:32px;height:32px;border:1px solid var(--line-2); border-radius:8px; background:var(--card);
+  display:grid;place-items:center; color:var(--text-2); cursor:pointer; position:relative}
+.icon-btn:hover{background:#F7F8FA}
+.icon-btn .pip{position:absolute; top:6px; right:7px; width:5px;height:5px;border-radius:50%;background:#E29A2D;border:1.5px solid #fff}
+.av-top{width:28px;height:28px;border-radius:50%;background:#E9EBEF;display:grid;place-items:center;font-size:11px;color:var(--text-2)}
+
+.wrap{width:100%; max-width:1180px; margin:0 auto; padding:20px 24px 48px}
+
+/* 页头 */
+.ph{display:flex; align-items:flex-start; gap:18px; margin-bottom:16px}
+.ph-title{display:flex; align-items:center; gap:10px}
+.ph h1{margin:0; font-size:21px; line-height:1.4; font-weight:600; letter-spacing:-.015em}
+.demo-tag{display:inline-flex; align-items:center; gap:5px; height:20px; padding:0 8px;
+  border-radius:5px; background:#FEF4E6; color:#B45309; border:1px solid #F6E4C6;
+  font-size:11.5px; font-weight:500; white-space:nowrap}
+.demo-tag i{width:5px; height:5px; border-radius:50%; background:#E29A2D}
+.ph .sub{margin:7px 0 0; font-size:13px; color:var(--text-2); line-height:1.55}
+.ph .acts{margin-left:auto; display:flex; align-items:center; gap:8px; flex:0 0 auto}
+.btn{height:34px; padding:0 13px; border-radius:8px; border:1px solid var(--line-2);
+  background:var(--card); color:var(--text); font-size:12.5px; font-weight:500; cursor:pointer;
+  display:inline-flex; align-items:center; gap:7px; white-space:nowrap}
+.btn:hover{background:#F7F8FA}
+.btn.primary{background:#16181D; border-color:#16181D; color:#fff}
+.btn.primary:hover{background:#262A31}
+.btn svg{opacity:.8}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:11px; box-shadow:var(--shadow)}
+.card-h{display:flex; align-items:center; gap:10px; padding:14px 18px 0}
+.card-h h2{margin:0; font-size:13px; font-weight:600}
+.card-h .more{margin-left:auto; font-size:12px; color:var(--text-3); text-decoration:none}
+
+/* 分布图卡 */
+.dist{position:relative; overflow:hidden; margin-bottom:14px}
+.viewport{position:relative; overflow:hidden; margin-top:8px}
+.track{display:flex; width:300%; transition:transform .5s cubic-bezier(.3,.7,.2,1)}
+.pane{width:33.3333%; flex:0 0 33.3333%; height:392px; overflow:hidden; padding:6px 18px 0}
+.pane-scroll{height:100%; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; justify-content:center}
+.pane-scroll::-webkit-scrollbar{width:0}
+
+/* 企业视图：按等级三栏 */
+.bstat{font-size:11.5px; color:var(--text-3); padding-bottom:10px}
+.bstat b{color:var(--text); font-weight:500}
+.bstat .sp{color:var(--text-4); margin:0 6px}
+.egrid{display:grid; grid-template-columns:repeat(4,1fr); column-gap:0}
+.egcol + .egcol{border-left:1px solid var(--line); padding-left:16px}
+.egcol:not(:last-child){padding-right:16px}
+.egcol{display:flex; flex-direction:column; min-width:0}
+.egcol.gz .egrow .nm{color:var(--text-3)}
+.eghead{display:flex; align-items:center; gap:6px; padding:0 2px 7px; border-bottom:1px solid var(--line); margin-bottom:3px}
+.eghead i{width:7px; height:7px; border-radius:50%; flex:0 0 7px}
+.eghead .t{font-size:12px; font-weight:600; white-space:nowrap}
+.eghead .n{margin-left:auto; font-size:11px; color:var(--text-3); white-space:nowrap}
+.egrow{display:flex; align-items:center; gap:6px; height:31px; padding:0 4px; border-radius:6px; cursor:pointer}
+.egrow:hover{background:#F7F8FA}
+.egrow .nm{flex:1; min-width:0; font-size:12.5px; color:var(--text-2);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.egrow .tag{flex:0 0 auto; font-size:10px; line-height:14px; padding:0 4px; border-radius:3px;
+  border:1px solid #F0C9C4; background:#FDF0EE; color:var(--red)}
+.egrow .tag.d{color:#4B5563; border-color:#DCE0E6; background:#FBFCFD}
+.egrow .c{flex:0 0 auto; font-size:11.5px; color:var(--text-3); font-variant-numeric:tabular-nums}
+.egfoot{padding-top:8px; border-top:1px dashed #EFF1F4; font-size:11px; color:var(--text-4)}
+.egfoot b{font-weight:500; color:var(--text-2)}
+.pane-note{margin-top:auto; padding-top:12px; font-size:11.5px; color:var(--text-4)}
+
+/* 纵向柱状图 */
+.colwrap{padding:4px 0 0}
+.colchart{width:100%; height:auto; display:block}
+.colchart .vlab{font-size:10.5px; fill:#8A9099}
+.colchart .vval{font-size:10.5px; fill:#5B6270}
+.colchart .vax{font-size:10px; fill:#AAB0B9}
+.colchart .vcol{cursor:pointer}
+.colchart .vcol:hover .vbar{filter:brightness(.93)}
+.colchart .vcol:hover .vlab{fill:#16181D}
+.legend-src{display:flex; gap:16px; padding:4px 0 0; font-size:11px; color:var(--text-3)}
+.legend-src span{display:flex; align-items:center; gap:5px}
+.legend-src i{width:7px;height:7px;border-radius:2px}
+.legend-src .hint{margin-left:auto; color:var(--text-4)}
+
+/* 等级视图 */
+.pie-wrap{display:flex; gap:32px; align-items:center}
+
+.pie{width:272px; height:272px; flex:0 0 272px}
+.pie path{cursor:pointer; transition:opacity .12s}
+.pie path:hover{opacity:.84}
+.l2{flex:1; min-width:0}
+.l2h,.l2r{display:grid; grid-template-columns:12px 44px 46px 46px 46px 1fr 40px; align-items:center; gap:10px; padding:0 8px}
+.l2h{height:24px; font-size:10.5px; color:var(--text-4); border-bottom:1px solid var(--line)}
+.l2h .n,.l2h .p{text-align:right}
+.l2r{height:50px; border-bottom:1px solid var(--line); cursor:pointer}
+.l2r:last-child{border-bottom:0}
+.l2r:hover{background:#F7F8FA}
+.l2r.dim{opacity:.45}
+.l2r i{width:12px; height:12px; border-radius:3px}
+.l2r .lv{font-size:12.5px; color:var(--text)}
+.l2r b{text-align:right; font-weight:500; color:var(--text); font-size:12.5px}
+.l2r u{text-align:right; text-decoration:none; color:var(--text-3); font-size:11.5px}
+.l2r em{text-align:right; font-style:normal; color:var(--text-3); font-size:11.5px}
+.l2r .cats{display:flex; align-items:center; gap:13px; min-width:0; overflow:hidden}
+.l2r .cat{font-size:11.5px; color:var(--text-3); white-space:nowrap; display:inline-flex; align-items:baseline; gap:4px}
+.l2r .cat b{font-weight:500; color:var(--text-2); font-size:12px}
+.l2r .cat.more{color:var(--text-4)}
+.l2r .go{font-size:11.5px; color:var(--text-4); text-align:right; transition:color .12s}
+.l2r:hover .go{color:var(--text-2)}
+
+.dots{display:flex; justify-content:center; gap:8px; padding:10px 0 14px}
+.dots button{width:22px;height:3px;border:0;border-radius:2px;background:#E3E6EB;cursor:pointer;padding:0;transition:width .2s,background .2s}
+.dots button[aria-current="true"]{width:30px;background:#16181D}
+.dots button:hover{background:#C9D0D9}
+.dots button[aria-current="true"]:hover{background:#16181D}
+
+/* 筛选行 */
+.filters{display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap}
+.fld{display:inline-flex; align-items:center; gap:7px; height:34px; padding:0 11px; border:1px solid var(--line-2);
+  border-radius:8px; background:var(--card); font-size:12.5px; color:var(--text-2); cursor:pointer}
+.fld:hover{background:#FAFBFC}
+.fld .v{color:var(--text)}
+.fld svg{opacity:.7}
+.fsearch{display:flex; align-items:center; gap:7px; height:34px; width:260px; padding:0 10px;
+  border:1px solid var(--line-2); border-radius:8px; background:var(--card); color:var(--text-4)}
+.fsearch input{border:0;outline:0;background:none;font:inherit;font-size:12.5px;color:var(--text);width:100%}
+.count{font-size:12px; color:var(--text-3); margin-left:auto}
+.count b{color:var(--text); font-weight:500}
+.toggle{display:inline-flex; align-items:center; gap:7px; font-size:12px; color:var(--text-2); cursor:pointer; user-select:none}
+.toggle .sw{width:28px;height:16px;border-radius:9px;background:#E3E6EB;position:relative;transition:background .15s}
+.toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.15);transition:transform .15s}
+.toggle[aria-pressed="true"] .sw{background:#16181D}
+.toggle[aria-pressed="true"] .sw::after{transform:translateX(12px)}
+
+/* 下拉面板 */
+.pop{position:absolute; z-index:40; width:288px; background:#fff; border:1px solid var(--line-2); border-radius:10px;
+  box-shadow:0 12px 32px rgba(17,24,39,.14); padding:6px; display:none;
+  max-height:392px; overflow:hidden; flex-direction:column}
+.pop.on{display:flex}
+.plist{overflow-y:auto; overscroll-behavior:contain; min-height:0; padding-bottom:2px}
+.pop::after{content:""; position:absolute; left:1px; right:1px; bottom:1px; height:26px; border-radius:0 0 9px 9px;
+  background:linear-gradient(to top,#fff 40%,rgba(255,255,255,0)); pointer-events:none}
+.pop .psearch{flex:0 0 auto; display:flex; align-items:center; gap:7px;
+  padding:8px 8px 7px; border-bottom:1px solid var(--line); color:var(--text-4)}
+.pop .psearch input{border:0;outline:0;background:none;font:inherit;font-size:12px;color:var(--text);width:100%}
+.pop .pgrp{font-size:11px;color:var(--text-4);padding:8px 9px 4px}
+.pop .pitem.all{border-bottom:1px solid var(--line);border-radius:6px 6px 0 0;margin-bottom:2px}
+.pop .pitem{display:flex;align-items:center;gap:8px;height:30px;padding:0 9px;border-radius:6px;font-size:12.5px;color:var(--text-2);cursor:pointer}
+.pop .pitem:hover{background:#F5F6F8;color:var(--text)}
+.pop .pitem .n{margin-left:auto;font-size:11.5px;color:var(--text-4)}
+.pop .pitem .mix{font-size:10.5px;color:var(--text-4);border:1px solid var(--line-2);border-radius:3px;padding:0 4px;line-height:14px}
+.pop .pempty{padding:18px 10px;font-size:12px;color:var(--text-4);text-align:center}
+
+/* 表格 */
+.tbl{width:100%; border-collapse:collapse}
+.tbl th{text-align:left; font-size:11.5px; font-weight:400; color:var(--text-3); padding:11px 18px;
+  border-bottom:1px solid var(--line); white-space:nowrap; background:#FCFCFD}
+.tbl td{padding:11px 18px; border-bottom:1px solid var(--line); font-size:12.5px; vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr{cursor:pointer}
+.tbl tbody tr:hover{background:#FAFBFC}
+.tbl .ent{font-weight:500}
+.tbl .lvbar{display:inline-block;width:3px;height:14px;border-radius:2px;vertical-align:-2px;margin-right:8px}
+.tbl td .d{display:block; font-size:11px; color:var(--text-4); margin-top:2px}
+.tbl .mu2{color:var(--text-3)}
+.tbl .new-in{color:var(--red); margin-left:8px}
+.pill{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; padding:1px 7px; border-radius:5px; line-height:17px; white-space:nowrap}
+.p-red{background:var(--red-bg); color:var(--red)}
+.p-amber{background:var(--amber-bg); color:var(--amber)}
+.p-green{background:var(--green-bg); color:var(--green)}
+.p-blue{background:#EDF2F7; color:#54697E}
+.p-gray{background:var(--gray-bg); color:var(--text-2)}
+.src-cell{font-size:12px; color:var(--text-2)}
+.src-cell b{font-weight:500; color:var(--text)}
+.state{display:inline-flex; align-items:center; gap:5px; font-size:11.5px; color:var(--text-3)}
+.state i{width:7px;height:7px;border-radius:2px;border:1px solid #A3AFBB}
+.state.np i{border-color:#A3AFBB; background:radial-gradient(circle at 50% 50%, #A3AFBB 1.5px, transparent 1.6px)}
+.state.na i{border-color:#A3AFBB}
+.tbl .act{color:var(--text-2); text-decoration:none; font-weight:500}
+.tbl .act:hover{color:var(--text)}
+.empty{padding:56px 18px; text-align:center}
+.empty p{margin:0 0 12px; font-size:13px; color:var(--text-2)}
+.empty .hint{font-size:11.5px; color:var(--text-3)}
+.tfoot{display:flex; align-items:center; gap:12px; padding:12px 18px; border-top:1px solid var(--line); font-size:11.5px; color:var(--text-3)}
+.tfoot .r{margin-left:auto; display:flex; gap:6px}
+
+/* 弹窗 */
+.mask{position:fixed; inset:0; background:rgba(17,24,39,.32); z-index:60; display:none; align-items:center; justify-content:center; padding:24px}
+.mask.on{display:flex}
+.modal{width:760px; max-width:100%; max-height:82vh; background:#fff; border-radius:12px; display:flex; flex-direction:column;
+  box-shadow:0 24px 60px rgba(17,24,39,.22); overflow:hidden}
+.m-head{display:flex; align-items:flex-start; gap:12px; padding:18px 20px 14px; border-bottom:1px solid var(--line)}
+.m-head h3{margin:0; font-size:16px; font-weight:600; letter-spacing:-.01em}
+.m-head .meta{margin-top:6px; font-size:11.5px; color:var(--text-3); display:flex; gap:14px; flex-wrap:wrap}
+.m-close{margin-left:auto; width:28px;height:28px;border:1px solid var(--line-2); border-radius:7px; background:#fff;
+  display:grid;place-items:center; cursor:pointer; color:var(--text-3); flex:0 0 28px}
+.m-close:hover{background:#F7F8FA; color:var(--text)}
+.m-body{padding:16px 20px; overflow:auto}
+.m-src{font-size:11.5px; color:var(--text-3); margin:0 0 8px; display:flex; align-items:center; gap:8px}
+.m-src b{color:var(--text); font-size:12px; font-weight:600}
+.m-src i{flex:1; height:1px; background:var(--line)}
+.ritem{padding:9px 0; border-bottom:1px dashed #EFF1F4}
+.ritem:last-child{border-bottom:0}
+.ritem .t1{display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:500}
+.ritem .t1 .dt{margin-left:auto; font-size:11px; color:var(--text-4); font-weight:400}
+.ritem .t2{margin-top:3px; font-size:11.5px; color:var(--text-3)}
+.ritem .t2 .org{color:var(--text-2)}
+.ritem .t2 a{color:var(--text-2); text-decoration:none; border-bottom:1px solid var(--line-2); margin-left:6px}
+.dual{font-size:10.5px; color:#4B5563; border:1px solid #DCE0E6; border-radius:4px; padding:0 5px; line-height:15px; font-weight:400}
+.new-tag{font-size:10.5px; color:var(--red); border:1px solid #F0C9C4; background:#FDF0EE; border-radius:4px; padding:0 5px; line-height:15px; font-weight:400}
+.m-none{padding:6px 0 10px; font-size:11.5px; color:var(--text-4)}
+.m-pos{margin-top:2px; border:1px solid #DCEBD9; background:#F7FBF6; border-radius:8px; padding:10px 12px}
+.m-pos .h{font-size:11px; color:#3F7A4E; margin-bottom:4px}
+.m-pos p{margin:0; font-size:12.5px; color:var(--text-2)}
+.m-more{margin-top:10px; font-size:11.5px; color:var(--text-3)}
+.m-ai{margin-top:14px; border:1px dashed var(--line-2); border-radius:9px; padding:12px 14px; background:#FCFCFD}
+.m-ai .h{font-size:11.5px; color:var(--text-3); margin-bottom:5px}
+.m-ai p{margin:0; font-size:12.5px; color:var(--text-2); line-height:1.65}
+.m-foot{display:flex; align-items:center; gap:10px; padding:12px 20px; border-top:1px solid var(--line); background:#FCFCFD}
+.m-foot .p{font-size:11px; color:var(--text-4); font-family:ui-monospace,Consolas,monospace}
+.m-foot .r{margin-left:auto; display:flex; gap:8px}
+.m-foot .btn{height:30px; font-size:12px}
+
+.toast{position:fixed; left:50%; bottom:32px; transform:translateX(-50%) translateY(8px); background:#16181D; color:#fff;
+  font-size:12.5px; padding:9px 15px; border-radius:8px; opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; z-index:80}
+.toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
+:focus-visible{outline:2px solid #16181D; outline-offset:2px; border-radius:5px}
+@media (max-width:1240px){
+  .egrid{gap:14px}
+  .pie{width:200px;height:200px;flex:0 0 200px}
+}
+@media (max-width:900px){
+  .side{display:none}
+  .search{display:none}
+  .ph{flex-direction:column}
+  .ph .acts{margin-left:0}
+  .egrid{grid-template-columns:1fr; gap:18px}
+  .pane{height:auto}
+  .pie-wrap{flex-direction:column;gap:16px}
+}
+@media print{.side,.top{display:none}body{background:#fff}}
+
+/* 侧栏收起 */
+.side{transition:width .18s ease, flex-basis .18s ease}
+.brand .collapse{background:none;border:0;padding:0;cursor:pointer;display:flex;align-items:center;color:var(--text-4);transition:transform .18s,color .12s}
+.brand .collapse:hover{color:var(--text-2)}
+.app.collapsed .side{width:68px;flex-basis:68px}
+.app.collapsed .brand{gap:5px;padding:5px 4px 14px}
+.app.collapsed .brand .name{display:none}
+.app.collapsed .brand .collapse{margin-left:auto;transform:rotate(180deg)}
+.app.collapsed .grp{display:none}
+.app.collapsed .item{justify-content:center;padding:0;font-size:0;position:relative}
+.app.collapsed .item .dot{position:absolute;top:8px;right:11px;margin:0}
+.app.collapsed .srcs{display:none}
+.app.collapsed .demo-card{display:none}
+.app.collapsed .user{justify-content:center;padding:9px 0 3px}
+.app.collapsed .user > span:last-child{display:none}
+.app.collapsed .brand .mark{flex:0 0 26px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="side">
+    <div class="brand">
+      <span class="mark">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="2" width="11" height="2.2" fill="#fff"/><rect x="1.5" y="6" width="7.5" height="2.2" fill="#fff"/><rect x="1.5" y="10" width="9.5" height="2.2" fill="#fff"/></svg>
+      </span>
+      <span class="name">企业风险监测</span>
+      <button class="collapse" id="sideToggle" aria-label="收起侧栏" title="收起侧栏">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M6 2.5v11"/></svg>
+      </button>
+    </div>
+
+    <div class="grp">监测面板</div>
+    <nav class="nav">
+      <a class="item" href="01-总览.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.7" y="1.7" width="5" height="5" rx="1.4"/><rect x="9.3" y="1.7" width="5" height="5" rx="1.4"/><rect x="1.7" y="9.3" width="5" height="5" rx="1.4"/><rect x="9.3" y="9.3" width="5" height="5" rx="1.4"/></svg>
+        总览 <span class="dot d-part" title="部分完成"></span>
+      </a>
+      <a class="item" href="03-取数任务.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1.8v7.4M8 9.2 4.9 6.1M8 9.2l3.1-3.1M2.2 11.4v1.6c0 .7.6 1.2 1.2 1.2h9.2c.7 0 1.2-.6 1.2-1.2v-1.6"/></svg>
+        取数·任务
+      </a>
+      <a class="item on" href="#" aria-current="page">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.4 3.6h8.4M2.4 8h11.2M2.4 12.4h6.6"/><circle cx="13.1" cy="3.6" r="1.2"/></svg>
+        风险明细 <span class="dot d-part" title="部分完成"></span>
+      </a>
+      <a class="item" href="04-AI与邮件.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.2" width="12.4" height="9.6" rx="1.8"/><path d="m2.4 4.4 5.6 3.9 5.6-3.9"/></svg>
+        AI 与邮件 <span class="dot d-wait" title="待分析"></span>
+      </a>
+      <a class="item" href="05-配置.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 4.8h11M2.5 8h11M2.5 11.2h11"/><circle cx="6" cy="4.8" r="1.6" fill="#fff"/><circle cx="10.6" cy="8" r="1.6" fill="#fff"/><circle cx="5" cy="11.2" r="1.6" fill="#fff"/></svg>
+        配置 <span class="dot d-ok" title="正常"></span>
+      </a>
+      <a class="item" href="06-系统设置.html">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.3"/><path d="M8 1.6v1.7M8 12.7v1.7M1.6 8h1.7M12.7 8h1.7M3.5 3.5l1.2 1.2M11.3 11.3l1.2 1.2M12.5 3.5l-1.2 1.2M4.7 11.3l-1.2 1.2"/></svg>
+        系统设置
+      </a>
+    </nav>
+
+    <div class="side-foot">
+      <div class="grp" style="padding-top:0">数据源</div>
+      <div class="srcs">
+        <div class="srcrow"><i class="sq d-ok"></i>信用中国<span>25/25</span></div>
+        <div class="srcrow"><i class="sq d-part"></i>企查查<span>23/25</span></div>
+      </div>
+      <div class="demo-card">
+        <div class="t"><i></i>演示快照</div>
+        <p>2026-10-21　25 家企业　22 条记录<br>非实时抓取</p>
+        <a href="#">查看数据来源</a>
+      </div>
+      <div class="user">
+        <span class="av">值</span>
+        <span>
+          <div class="nm">值班账号</div>
+          <div class="em">risk_monitor_demo</div>
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <div class="crumb">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.4 3.6h8.4M2.4 8h11.2M2.4 12.4h6.6"/><circle cx="13.1" cy="3.6" r="1.2"/></svg>
+        <b>风险明细</b>
+      </div>
+      <div class="right">
+        <label class="search">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"/><path d="m10.7 10.7 3 3"/></svg>
+          <input placeholder="搜索企业、栏目或记录…">
+        </label>
+        <button class="icon-btn" aria-label="帮助">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.3"/><path d="M6.3 6.2c.1-.9.8-1.5 1.7-1.5.9 0 1.7.6 1.7 1.5 0 1.2-1.7 1.3-1.7 2.6"/><circle cx="8" cy="11.3" r=".8" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="通知">
+          <span class="pip"></span>
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1.9a4.1 4.1 0 0 0-4.1 4.1c0 3.3-1.3 4.3-1.3 4.3h10.8s-1.3-1-1.3-4.3A4.1 4.1 0 0 0 8 1.9Z"/><path d="M6.6 12.7a1.5 1.5 0 0 0 2.8 0"/></svg>
+        </button>
+        <span class="av-top">值</span>
+      </div>
+    </header>
+
+    <main class="wrap">
+
+      <div class="ph">
+        <div>
+          <div class="ph-title">
+            <h1>风险明细</h1>
+            <span class="demo-tag"><i></i>演示快照</span>
+          </div>
+          <p class="sub">今日 25 家企业已取数，20 家发现风险记录，共 22 条，其中 9 条为高风险。</p>
+        </div>
+        <div class="acts">
+          <button class="btn" id="btnExport">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2.2v7.4M4.9 6.5 8 9.6l3.1-3.1M2.6 12.4h10.8"/></svg>
+            导出 Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- 分布图 -->
+      <section class="card dist">
+        <div class="card-h">
+          <h2>风险分布</h2>
+          <span style="font-size:11px;color:var(--text-4)">自动轮播　可横向拖拽　点指示器切换</span>
+        </div>
+        <div class="viewport" id="vp">
+          <div class="track" id="track">
+
+            <!-- 视图一：企业 -->
+            <div class="pane">
+              <div class="pane-scroll">
+                <div class="bstat" id="entStat"></div>
+                <div class="egrid" id="entGrid"></div>
+                <div class="pane-note" id="entNote"></div>
+              </div>
+            </div>
+
+            <!-- 视图二：栏目 -->
+            <div class="pane">
+              <div class="pane-scroll">
+                <div class="colwrap"><svg id="catChart" viewBox="0 0 1000 292" class="colchart" role="img" aria-label="各栏目风险记录数"></svg></div>
+                <div class="legend-src" style="padding-top:8px">
+                  <span><i style="background:var(--lv-h)"></i>高风险</span>
+                  <span><i style="background:var(--lv-m)"></i>中风险</span>
+                  <span><i style="background:var(--lv-l)"></i>低风险</span>
+                  <span class="hint">点柱直接筛选下表明细</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 视图三：等级 -->
+            <div class="pane">
+              <div class="pane-scroll">
+                <div class="lv-head" id="lvHead" style="display:flex;align-items:baseline;gap:14px;font-size:12px;color:var(--text-2);padding-bottom:10px">
+                  <span>等级构成</span><span style="font-size:11px;color:var(--text-4)">22 条记录　20 家企业　占比按记录数</span>
+                </div>
+                <div class="pie-wrap">
+                  <svg class="pie" id="pie" viewBox="0 0 220 220" role="img" aria-label="等级占比"></svg>
+                  <div class="l2">
+                    <div class="l2h"><span></span><span>等级</span><span class="n">记录</span><span class="n">企业</span><span class="p">占比</span><span>主要栏目</span><span></span></div>
+                    <div id="lvRows"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="dots" id="dots" role="tablist" aria-label="分布视图">
+          <button aria-current="true" data-i="0" aria-label="企业视图"></button>
+          <button aria-current="false" data-i="1" aria-label="栏目视图"></button>
+          <button aria-current="false" data-i="2" aria-label="等级视图"></button>
+        </div>
+      </section>
+
+      <!-- 筛选 -->
+      <div class="filters">
+        <button class="fld">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3.2" width="12" height="11" rx="2"/><path d="M2 6.6h12M5.3 1.8v2.6M10.7 1.8v2.6"/></svg>
+          数据日期 <span class="v">2026-10-21</span>
+        </button>
+
+        <button class="fld" id="catBtn" aria-expanded="false">
+          <span id="catLabel">全部栏目</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="m3 4.6 3 3 3-3"/></svg>
+        </button>
+
+        <label class="fsearch">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"/><path d="m10.7 10.7 3 3"/></svg>
+          <input id="q" placeholder="搜索企业 / 来源 / 内容">
+        </label>
+
+        <button class="fld" id="lvFld" style="display:none">
+          等级 <span class="v" id="lvVal"></span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3l6 6M9 3 3 9"/></svg>
+        </button>
+
+        <button class="toggle" id="withZero" aria-pressed="false">
+          <span class="sw"></span>含无记录企业 <span id="zeroN">5</span> 家
+        </button>
+
+        <span class="count">当前 <b id="cnt">20</b> 家 / 共 25 家</span>
+      </div>
+
+      <div class="pop" id="catPop">
+        <div class="psearch">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.2" cy="7.2" r="4.6"/><path d="m10.7 10.7 3 3"/></svg>
+          <input placeholder="搜索栏目…">
+        </div>
+        <div class="plist" id="catList"></div>
+      </div>
+
+      <!-- 明细表 -->
+      <section class="card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:29%">企业名称</th>
+              <th style="width:11%">综合风险</th>
+              <th style="width:11%">信用中国</th>
+              <th style="width:11%">企查查</th>
+              <th style="width:26%">风险摘要</th>
+              <th style="width:12%; text-align:right">明细</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div class="tfoot">
+          <span id="footCnt">显示 20 家　记录 22 条</span>
+          <span class="r" style="color:var(--text-4)">记录明细见导出文件，或点行查看</span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="mask" id="mask">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="m-head">
+      <div>
+        <h3 id="mTitle">企业名称</h3>
+        <div class="meta" id="mMeta"></div>
+      </div>
+      <button class="m-close" id="mClose" aria-label="关闭">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3l8 8M11 3l-8 8"/></svg>
+      </button>
+    </div>
+    <div class="m-body" id="mBody"></div>
+    <div class="m-foot">
+      <span class="p" id="mPath">data/2026-10-21.xlsx</span>
+      <span class="r">
+        <button class="btn" id="mCopy">复制路径</button>
+        <button class="btn primary" id="mDone">关闭</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<script id="riskData" type="application/json">
+{
+  "date": "2026-10-21",
+  "companies": [
+    {"id":"hcd","name":"恒昌达建筑工程有限公司","lv":"高","recs":[
+      {"cat":"失信被执行","lv":"高","date":"2026-08-12","src":["信用中国","企查查"],"org":"某某市人民法院","desc":"执行标的 120 万元未履行　案号 (2026)内0302执1127号"},
+      {"cat":"严重失信","lv":"高","date":"2026-09-05","src":["信用中国"],"org":"某某市市场监督管理局","desc":"列入严重违法失信名单　决定书 某市监信罚〔2026〕8 号"}
+    ]},
+    {"id":"yd","name":"远达物流有限公司","lv":"高","recs":[
+      {"cat":"失信被执行","lv":"高","date":"2026-07-30","src":["信用中国"],"org":"某某区人民法院","desc":"执行标的 86 万元未履行　案号 (2026)内0302执0846号"}
+    ]},
+    {"id":"gt","name":"广泰建材有限公司","lv":"高","noPerm":true,"recs":[
+      {"cat":"严重失信","lv":"高","date":"2026-09-05","src":["信用中国"],"org":"某某市市场监督管理局","desc":"列入严重违法失信名单　决定书 某市监信罚〔2026〕11 号"}
+    ]},
+    {"id":"rfy","name":"瑞丰源商贸有限公司","lv":"高","recs":[
+      {"cat":"失信被执行","lv":"高","date":"2026-06-18","src":["信用中国","企查查"],"org":"某某市中级人民法院","desc":"执行标的 214 万元未履行　案号 (2026)内03执216号"}
+    ]},
+    {"id":"jst","name":"金盛通物流有限公司","lv":"高","recs":[
+      {"cat":"失信被执行","lv":"高","date":"2026-05-26","src":["信用中国"],"org":"某某区人民法院","desc":"执行标的 63 万元未履行　案号 (2026)内0302执0513号"}
+    ]},
+    {"id":"hyx","name":"华宇新材料科技有限公司","lv":"高","recs":[
+      {"cat":"严重失信","lv":"高","date":"2026-07-09","src":["企查查"],"org":"某某市应急管理局","desc":"列入安全生产严重违法失信名单"}
+    ]},
+    {"id":"zkj","name":"中科精密机械制造有限公司","lv":"高","recs":[
+      {"cat":"破产重整","lv":"高","date":"2026-04-15","src":["信用中国"],"org":"某某市中级人民法院","desc":"裁定受理破产重整申请　管理人 某某律师事务所"}
+    ]},
+    {"id":"gld","name":"广联电子科技有限公司","lv":"高","recs":[
+      {"cat":"吊销注销","lv":"高","date":"2026-03-22","src":["企查查"],"org":"某某市市场监督管理局","desc":"营业执照被吊销，未办理注销"}
+    ]},
+
+    {"id":"tc","name":"天成机械制造有限公司","lv":"中","recs":[
+      {"cat":"经营异常","lv":"中","date":"2026-08-08","src":["信用中国"],"org":"某某区市场监督管理局","desc":"未按期公示年度报告　列入经营异常名录"},
+      {"cat":"税务违法","lv":"中","date":"2026-09-11","src":["信用中国"],"org":"某某区税务局","desc":"欠税公告　金额 18.6 万元","isNew":true}
+    ]},
+    {"id":"tr","name":"天润食品加工有限公司","lv":"中","recs":[
+      {"cat":"经营异常","lv":"中","date":"2026-07-18","src":["信用中国"],"org":"某某区市场监督管理局","desc":"通过登记的住所无法联系"}
+    ]},
+    {"id":"kt","name":"康泰医药批发有限公司","lv":"中","recs":[
+      {"cat":"股权冻结","lv":"中","date":"2026-06-02","src":["企查查"],"org":"某某区人民法院","desc":"冻结股权 320 万股　执行裁定 (2026)内0302执保88号"}
+    ]},
+    {"id":"xd","name":"鑫达纺织服饰有限公司","lv":"中","recs":[
+      {"cat":"限制高消费","lv":"中","date":"2026-08-27","src":["企查查"],"org":"某某市人民法院","desc":"对法定代表人限制高消费"}
+    ]},
+    {"id":"xy","name":"新原汽贸有限公司","lv":"中","noPerm":true,"recs":[
+      {"cat":"行政处罚","lv":"中","date":"2026-09-27","src":["信用中国"],"org":"某某市市场监督管理局","desc":"罚款 12.5 万元　决定书 某市监罚〔2026〕114 号","note":"较大金额","isNew":true}
+    ]},
+
+    {"id":"hy","name":"华远置业有限公司","lv":"低","recs":[
+      {"cat":"行政处罚","lv":"低","date":"2026-02-18","src":["信用中国"],"org":"某某区住房和城乡建设局","desc":"施工扬尘超标　罚款 2 万元"}
+    ]},
+    {"id":"ht","name":"汇通商贸有限公司","lv":"低","recs":[
+      {"cat":"行政处罚","lv":"低","date":"2026-03-21","src":["信用中国"],"org":"某某区市场监督管理局","desc":"未按规定明码标价　警告并罚款 3000 元"}
+    ]},
+    {"id":"hj","name":"宏基建材有限公司","lv":"低","recs":[
+      {"cat":"行政处罚","lv":"低","date":"2026-05-06","src":["信用中国"],"org":"某某区市场监督管理局","desc":"产品标识不符合规定　罚款 8000 元"}
+    ]},
+    {"id":"my","name":"明远信息技术有限公司","lv":"低","recs":[
+      {"cat":"司法案件","lv":"低","date":"2026-04-09","src":["企查查"],"org":"某某区人民法院","desc":"技术服务合同纠纷　已结案"}
+    ]},
+    {"id":"zh","name":"正和环保工程有限公司","lv":"低","recs":[
+      {"cat":"司法案件","lv":"低","date":"2026-07-11","src":["信用中国"],"org":"某某区人民法院","desc":"建设工程施工合同纠纷　已调解结案"}
+    ]},
+    {"id":"xh","name":"祥和物业管理有限公司","lv":"低","recs":[
+      {"cat":"股权出质","lv":"低","date":"2026-08-20","src":["企查查"],"org":"","desc":"出质股权 120 万股　质权人 某某商业银行"}
+    ]},
+    {"id":"xyg","name":"兴业汽车配件有限公司","lv":"低","recs":[
+      {"cat":"股权出质","lv":"低","date":"2026-09-14","src":["信用中国","企查查"],"org":"","desc":"出质股权 260 万股　质权人 某某融资担保公司","isNew":true}
+    ]},
+
+    {"id":"jh","name":"嘉禾农业科技有限公司","lv":"无","recs":[],"positive":"A 级纳税人　2026-06-11　密云区税务局"},
+    {"id":"bw","name":"博文教育咨询有限公司","lv":"无","recs":[],"positive":"A 级纳税人　2026-06-11　密云区税务局"},
+    {"id":"sp","name":"尚品广告传媒有限公司","lv":"无","recs":[],"positive":"A 级守合同重信用　2026-08-18　亳州谯城区"},
+    {"id":"at","name":"安泰保安服务有限公司","lv":"无","recs":[],"positive":"A 级纳税人　2026-06-11　密云区税务局"},
+    {"id":"ly","name":"绿源新能源有限公司","lv":"无","recs":[],"positive":"A 级纳税人　2026-04-30　景德镇市税务局"}
+  ]
+}
+</script>
+
+<script>
+var DATA = JSON.parse(document.getElementById('riskData').textContent);
+var CO = DATA.companies;
+var SRC = ['信用中国','企查查'];
+var LV = {
+  '高':{cls:'p-red',  c:'var(--lv-h)', dot:'#C0483B', k:0},
+  '中':{cls:'p-amber',c:'var(--lv-m)', dot:'#D2913F', k:1},
+  '低':{cls:'p-blue', c:'var(--lv-l)', dot:'#8CA3B8', k:2},
+  '无':{cls:'p-gray', c:'var(--lv-0)', dot:'#D8DEE6', k:3}
+};
+
+function byId(k){ for(var i=0;i<CO.length;i++){ if(CO[i].id===k) return CO[i]; } return null; }
+function srcN(co, s){ var n=0; co.recs.forEach(function(r){ if(r.src.indexOf(s)>-1) n++; }); return n; }
+function lastDate(co){ var d=''; co.recs.forEach(function(r){ if(r.date>d) d=r.date; }); return d; }
+function hasDual(co){ return co.recs.some(function(r){ return r.src.length>1; }); }
+function hasNew(co){ return co.recs.some(function(r){ return r.isNew; }); }
+function catsOf(co){
+  var seen={}, out=[];
+  co.recs.forEach(function(r){ if(!seen[r.cat]){ seen[r.cat]=1; out.push(r.cat); } });
+  return out;
+}
+
+/* ── 明细表 ─────────────────────────────── */
+var sorted = CO.slice().sort(function(a,b){
+  if(LV[a.lv].k !== LV[b.lv].k) return LV[a.lv].k - LV[b.lv].k;
+  if(b.recs.length !== a.recs.length) return b.recs.length - a.recs.length;
+  return lastDate(b).localeCompare(lastDate(a));
+});
+
+function sumCell(co){
+  if(!co.recs.length){
+    return '<span class="mu2">未发现风险记录</span>' + (co.positive ? '<span class="d">' + co.positive.split('　')[0] + '</span>' : '');
+  }
+  var m={}, order=[], note={};
+  co.recs.forEach(function(r){
+    if(!m[r.cat]){ m[r.cat]=0; order.push(r.cat); }
+    m[r.cat]++;
+    if(r.note && !note[r.cat]) note[r.cat]=r.note;
+  });
+  order.sort(function(x,y){ return m[y]-m[x] || x.localeCompare(y); });
+  var txt = order.slice(0,2).map(function(c){
+    return c + ' ' + m[c] + ' 条' + (note[c] ? '（' + note[c] + '）' : '');
+  }).join('，');
+  if(order.length>2) txt += '，等 ' + order.length + ' 类';
+  var newC = co.recs.filter(function(r){ return r.isNew; }).length;
+  return txt + '<span class="d">最近 ' + lastDate(co).slice(5)
+    + (newC ? '<span class="new-in">本期新增 ' + newC + ' 条</span>' : '') + '</span>';
+}
+function srcCell(n){
+  return n ? '<b>' + n + '</b> 条' : '<span class="state na"><i></i>未发现</span>';
+}
+function qccCell(co){
+  if(srcN(co,'企查查')>0) return srcCell(srcN(co,'企查查'));
+  if(co.noPerm) return '<span class="state np"><i></i>无权限</span>';
+  return '<span class="state na"><i></i>未发现</span>';
+}
+
+var tbody = document.getElementById('rows');
+var html = '';
+sorted.forEach(function(co){
+  var n = co.recs.length;
+  var q = [co.name];
+  co.recs.forEach(function(r){ q.push(r.cat, r.org, r.desc, r.src.join('')); });
+  html += '<tr data-ent="' + co.id + '" data-lv="' + co.lv + '" data-n="' + n + '"'
+       +  ' data-cats="' + catsOf(co).join(',') + '" data-q="' + q.join(' ').replace(/"/g,'') + '">'
+       +  '<td class="ent"><span class="lvbar" style="background:' + LV[co.lv].c + '"></span>' + co.name + '</td>'
+       +  '<td><span class="pill ' + LV[co.lv].cls + '">' + co.lv + '　' + n + ' 条</span></td>'
+       +  '<td class="src-cell">' + srcCell(srcN(co,'信用中国')) + '</td>'
+       +  '<td>' + qccCell(co) + '</td>'
+       +  '<td>' + sumCell(co) + '</td>'
+       +  '<td style="text-align:right"><a class="act" href="javascript:void 0">查看</a></td>'
+       +  '</tr>';
+});
+html += '<tr id="emptyRow" style="display:none"><td colspan="6"><div class="empty">'
+     +  '<p>这个筛选下没有记录。</p><div class="hint" id="emptyHint"></div>'
+     +  '<p style="margin-top:10px"><a class="act" href="javascript:void 0" id="clearAll">清空筛选</a></p>'
+     +  '</div></td></tr>';
+tbody.innerHTML = html;
+
+/* ── 视图一：企业（按等级三栏） ───────────── */
+(function(){
+  var stat = document.getElementById('entStat'),
+      grid = document.getElementById('entGrid'),
+      note = document.getElementById('entNote');
+  var withRec = CO.filter(function(c){ return c.recs.length; });
+  var totalR = withRec.reduce(function(s,c){ return s+c.recs.length; }, 0);
+  var newN = CO.reduce(function(s,c){ return s + c.recs.filter(function(r){ return r.isNew; }).length; }, 0);
+  var zeroN = CO.length - withRec.length;
+
+  stat.innerHTML = '合计 <b>' + totalR + '</b> 条　<b>' + withRec.length + '</b> 家有记录'
+    + '<span class="sp">·</span>均值 <b>' + (totalR/withRec.length).toFixed(1) + '</b> 条/家'
+    + '<span class="sp">·</span>本期新增 <b>' + newN + '</b> 条';
+
+  var cols = [['高','高风险'],['中','中风险'],['低','低风险'],['无','未发现记录']];
+  var g = '';
+  cols.forEach(function(pair){
+    var lv = pair[0], label = pair[1];
+    var list = CO.filter(function(c){ return c.lv===lv; })
+      .sort(function(a,b){ return b.recs.length-a.recs.length || lastDate(b).localeCompare(lastDate(a)); });
+    var recs = list.reduce(function(s,c){ return s+c.recs.length; }, 0);
+    g += '<div class="egcol' + (lv==='无' ? ' gz' : '') + '">'
+      +  '<div class="eghead"><i style="background:' + LV[lv].dot + '"></i>'
+      +  '<span class="t">' + label + '</span>'
+      +  '<span class="n">' + list.length + ' 家' + (lv==='无' ? '' : ' · ' + recs + ' 条') + '</span></div>';
+    list.forEach(function(c){
+      g += '<div class="egrow" data-ent="' + c.id + '" tabindex="0" title="' + c.name + '　' + c.recs.length + ' 条">'
+        +  '<span class="nm">' + c.name + '</span>'
+        +  (hasNew(c) ? '<span class="tag">新增</span>' : (hasDual(c) ? '<span class="tag d">双源</span>' : ''))
+        +  '<span class="c">' + (lv==='无' ? '—' : c.recs.length + ' 条') + '</span></div>';
+    });
+    g += '</div>';
+  });
+  grid.innerHTML = g;
+  note.textContent = '点企业名查看该企业全部记录　·　红名单为正面资质，不计入风险记录数。';
+})();
+
+/* ── 视图二：栏目（按等级堆叠柱） ─────────── */
+(function(){
+  var chart = document.getElementById('catChart');
+  var m = {}, order = [];
+  CO.forEach(function(co){
+    co.recs.forEach(function(r){
+      if(!m[r.cat]){ m[r.cat] = {t:0, by:{}}; order.push(r.cat); }
+      m[r.cat].t++; m[r.cat].by[r.lv] = (m[r.cat].by[r.lv]||0)+1;
+    });
+  });
+  function topK(cat){
+    var by = m[cat].by, best = '低';
+    ['高','中','低'].forEach(function(lv){ if(by[lv] && LV[lv].k < LV[best].k) best = lv; });
+    return best;
+  }
+  order.sort(function(a,b){
+    return m[b].t - m[a].t || LV[topK(a)].k - LV[topK(b)].k || a.localeCompare(b);
+  });
+
+  var L=48, R=985, B=232, TOP=52, unit=(B-TOP)/4, slot=(R-L)/order.length, bw=30;
+  var s = '';
+  [0,2,4].forEach(function(v){
+    var y = B - v*unit;
+    s += '<line x1="' + L + '" y1="' + y + '" x2="' + R + '" y2="' + y + '" stroke="' + (v===0?'#E3E7ED':'#F1F3F6') + '"/>'
+      +  '<text x="' + (L-10) + '" y="' + (y+3.5) + '" text-anchor="end" class="vax">' + v + '</text>';
+  });
+  order.forEach(function(cat, i){
+    var d = m[cat], x = L + i*slot + (slot-bw)/2, cx = x + bw/2, y = B, seg = '';
+    ['低','中','高'].forEach(function(lv){
+      var n = d.by[lv]; if(!n) return;
+      var h = n*unit; y -= h;
+      seg += '<rect class="vbar" x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" fill="' + LV[lv].c + '" rx="1.5"/>';
+    });
+    s += '<g class="vcol" data-cat="' + cat + '" tabindex="0">'
+      +  '<rect class="hit" x="' + (L + i*slot) + '" y="30" width="' + slot + '" height="' + (B-30) + '" fill="transparent"/>'
+      +  seg
+      +  '<text class="vval" x="' + cx + '" y="' + (y-8) + '" text-anchor="middle">' + d.t + '</text>'
+      +  '<text class="vlab" x="' + cx + '" y="' + (B+12) + '" text-anchor="end" transform="rotate(-40 ' + cx + ' ' + (B+12) + ')">' + cat + '</text>'
+      +  '</g>';
+  });
+  chart.innerHTML = s;
+})();
+
+/* ── 视图三：等级（饼 + 明细表） ───────────── */
+(function(){
+  var lvN = {'高':0,'中':0,'低':0}, coN = {'高':0,'中':0,'低':0,'无':0}, catBy = {'高':{},'中':{},'低':{}};
+  CO.forEach(function(co){
+    coN[co.lv]++;
+    co.recs.forEach(function(r){
+      lvN[r.lv]++;
+      catBy[r.lv][r.cat] = (catBy[r.lv][r.cat]||0)+1;
+    });
+  });
+  var total = lvN['高'] + lvN['中'] + lvN['低'];
+  var cx=110, cy=110, rad=88, a=-90, paths='';
+  function pt(ang){
+    var r = ang*Math.PI/180;
+    return [(cx+rad*Math.cos(r)).toFixed(1), (cy+rad*Math.sin(r)).toFixed(1)];
+  }
+  ['高','中','低'].forEach(function(lv){
+    var sw = lvN[lv]/total*360;
+    var p1 = pt(a), p2 = pt(a+sw);
+    paths += '<path data-lv="' + lv + '" d="M' + cx + ',' + cy + ' L' + p1[0] + ',' + p1[1]
+      + ' A' + rad + ',' + rad + ' 0 ' + (sw>180?1:0) + ' 1 ' + p2[0] + ',' + p2[1] + ' Z" fill="' + LV[lv].c + '" stroke="#fff" stroke-width="2"/>';
+    a += sw;
+  });
+  document.getElementById('pie').innerHTML = paths;
+
+  var rows = '';
+  ['高','中','低'].forEach(function(lv){
+    var cats = Object.keys(catBy[lv]).sort(function(x,y){ return catBy[lv][y]-catBy[lv][x] || x.localeCompare(y); });
+    var top = cats.slice(0,3).map(function(c){ return '<span class="cat">' + c + '<b>' + catBy[lv][c] + '</b></span>'; }).join('');
+    if(cats.length>3) top += '<span class="cat more">等 ' + cats.length + ' 类</span>';
+    rows += '<div class="l2r" data-lv="' + lv + '" tabindex="0"><i style="background:' + LV[lv].c + '"></i>'
+      + '<span class="lv">' + lv + '</span><b>' + lvN[lv] + '</b><u>' + coN[lv] + ' 家</u>'
+      + '<em>' + Math.round(lvN[lv]/total*100) + '%</em>'
+      + '<span class="cats">' + top + '</span><span class="go">筛选</span></div>';
+  });
+  rows += '<div class="l2r" data-lv="无" tabindex="0"><i style="background:var(--lv-0)"></i>'
+    + '<span class="lv">无</span><b>0</b><u>' + coN['无'] + ' 家</u><em>0%</em>'
+    + '<span class="cats"><span class="cat">守信红名单，未见风险记录</span></span><span class="go">筛选</span></div>';
+  document.getElementById('lvRows').innerHTML = rows;
+})();
+
+/* ── 栏目下拉 ─────────────────────────────── */
+(function(){
+  var m = {}, order = [];
+  CO.forEach(function(co){
+    co.recs.forEach(function(r){
+      if(!m[r.cat]){ m[r.cat] = {t:0, by:{}}; order.push(r.cat); }
+      m[r.cat].t++; m[r.cat].by[r.lv] = (m[r.cat].by[r.lv]||0)+1;
+    });
+  });
+  var groups = [
+    ['高','高风险',['失信被执行','严重失信','破产重整','吊销注销']],
+    ['中','中风险',['经营异常','股权冻结','限制高消费','税务违法']],
+    ['低','低风险',['行政处罚','司法案件','股权出质']]
+  ];
+  var total = CO.reduce(function(s,c){ return s+c.recs.length; }, 0);
+  var html = '<div class="pitem all" data-cat="">全部<span class="n">' + total + '</span></div>';
+  groups.forEach(function(g){
+    html += '<div class="pgrp">' + g[1] + '</div>';
+    g[2].forEach(function(cat){
+      var d = m[cat]; if(!d) return;
+      var mix = '';
+      var levels = Object.keys(d.by);
+      if(levels.length>1){
+        var other = levels.filter(function(l){ return l!==g[0]; });
+        mix = '<span class="mix">含' + other.join('/') + ' ' + other.reduce(function(s,l){ return s+d.by[l]; },0) + '</span>';
+      }
+      html += '<div class="pitem" data-cat="' + cat + '">' + cat + mix + '<span class="n">' + d.t + '</span></div>';
+    });
+  });
+  html += '<div class="pempty" style="display:none">没有匹配的栏目</div>';
+  document.getElementById('catList').innerHTML = html;
+})();
+
+/* ── 分布图轮播 ───────────────────────────── */
+var track = document.getElementById('track'),
+    vp = document.getElementById('vp'),
+    dots = Array.prototype.slice.call(document.querySelectorAll('#dots button')),
+    idx = 0, timer = null,
+    dwell = [10000, 6000, 6000];
+
+function paint(){
+  track.style.transform = 'translateX(' + (-idx * 33.3333) + '%)';
+  dots.forEach(function(d, k){ d.setAttribute('aria-current', k === idx ? 'true' : 'false'); });
+}
+function schedule(ms){
+  clearTimeout(timer);
+  timer = setTimeout(function(){ idx = (idx + 1) % 3; paint(); schedule(dwell[idx]); }, ms);
+}
+function goto(i, manual){
+  idx = (i + 3) % 3;
+  paint();
+  schedule(manual ? 10000 : dwell[idx]);
+}
+dots.forEach(function(d){ d.addEventListener('click', function(){ goto(+d.dataset.i, true); }); });
+vp.addEventListener('mouseenter', function(){ clearTimeout(timer); });
+vp.addEventListener('mouseleave', function(){ schedule(3000); });
+
+var dragging = false, startX = 0, dx = 0;
+vp.addEventListener('pointerdown', function(e){
+  dragging = true; startX = e.clientX; dx = 0;
+  track.style.transition = 'none';
+  clearTimeout(timer);
+});
+vp.addEventListener('pointermove', function(e){
+  if(!dragging) return;
+  dx = e.clientX - startX;
+  track.style.transform = 'translateX(calc(' + (-idx * 33.3333) + '% + ' + dx + 'px))';
+});
+window.addEventListener('pointerup', function(){
+  if(!dragging) return;
+  dragging = false;
+  track.style.transition = '';
+  if (dx < -40) goto(idx + 1, true);
+  else if (dx > 40) goto(idx - 1, true);
+  else { paint(); schedule(dwell[idx]); }
+});
+schedule(dwell[0]);
+
+/* ── 筛选 ─────────────────────────────────── */
+var q = document.getElementById('q'),
+    withZero = document.getElementById('withZero'),
+    cnt = document.getElementById('cnt'),
+    footCnt = document.getElementById('footCnt'),
+    catBtn = document.getElementById('catBtn'),
+    catPop = document.getElementById('catPop'),
+    curCat = '', curQ = '', curLv = '';
+
+function apply(){
+  var rows = Array.prototype.slice.call(document.querySelectorAll('#rows tr[data-cats]'));
+  var shown = 0, total = 0, zero = 0;
+  rows.forEach(function(tr){
+    var isZero = tr.dataset.lv === '无';
+    var cats = (tr.dataset.cats || '').split(',').filter(Boolean);
+    var okZero = !isZero || withZero.getAttribute('aria-pressed') === 'true';
+    var okCat = !curCat || cats.indexOf(curCat) > -1;
+    var okQ = !curQ || (tr.dataset.q || '').indexOf(curQ) > -1;
+    var okLv = !curLv || tr.dataset.lv === curLv;
+    var show = okZero && okCat && okQ && okLv;
+    tr.style.display = show ? '' : 'none';
+    if (show){
+      shown++;
+      if (isZero) zero++; else total += parseInt(tr.dataset.n, 10) || 0;
+    }
+  });
+  cnt.textContent = shown;
+  footCnt.textContent = '显示 ' + shown + ' 家　记录 ' + total + ' 条';
+  var emptyRow = document.getElementById('emptyRow');
+  if (emptyRow) emptyRow.style.display = shown ? 'none' : '';
+  var hint = document.getElementById('emptyHint');
+  if (hint) hint.textContent = '当前筛选：' + (curLv ? curLv + '风险　' : '') + (curCat || '全部栏目') + '　·　搜索「' + curQ + '」';
+  var lf = document.getElementById('lvFld');
+  lf.style.display = curLv ? '' : 'none';
+  document.getElementById('lvVal').textContent = curLv ? curLv + '风险' : '';
+}
+
+q.addEventListener('input', function(){ curQ = q.value.trim(); apply(); });
+withZero.addEventListener('click', function(){
+  var on = withZero.getAttribute('aria-pressed') === 'true';
+  withZero.setAttribute('aria-pressed', on ? 'false' : 'true');
+  apply();
+});
+
+var catList = document.getElementById('catList');
+var catSearch = catPop.querySelector('.psearch input');
+
+function filterCat(val){
+  val = (val || '').trim();
+  var items = Array.prototype.slice.call(catList.querySelectorAll('.pitem'));
+  var any = false;
+  items.forEach(function(it){
+    var nm = (it.firstChild.textContent || '').trim();
+    var hit = !val || nm.indexOf(val) > -1;
+    it.style.display = hit ? '' : 'none';
+    if (hit && !it.classList.contains('all')) any = true;
+  });
+  Array.prototype.slice.call(catList.querySelectorAll('.pgrp')).forEach(function(g){
+    var el = g.nextElementSibling, show = false;
+    while (el && !el.classList.contains('pgrp')){
+      if (el.classList.contains('pitem') && el.style.display !== 'none'){ show = true; break; }
+      el = el.nextElementSibling;
+    }
+    g.style.display = show ? '' : 'none';
+  });
+  var empty = catList.querySelector('.pempty');
+  if (empty) empty.style.display = (val && !any) ? '' : 'none';
+  catList.scrollTop = 0;
+}
+
+function openCat(){
+  catPop.classList.add('on');
+  catBtn.setAttribute('aria-expanded', 'true');
+  catSearch.value = '';
+  filterCat('');
+  catList.scrollTop = 0;
+  var r = catBtn.getBoundingClientRect();
+  var h = Math.min(392, window.innerHeight - r.bottom - 24);
+  catPop.style.maxHeight = Math.max(200, h) + 'px';
+  catPop.style.left = r.left + 'px';
+  catPop.style.top = (r.bottom + 6 + window.scrollY) + 'px';
+  catPop.style.position = 'absolute';
+}
+
+catBtn.addEventListener('click', function(e){
+  e.stopPropagation();
+  if (catPop.classList.contains('on')){ catPop.classList.remove('on'); catBtn.setAttribute('aria-expanded','false'); }
+  else openCat();
+});
+catSearch.addEventListener('input', function(){ filterCat(catSearch.value); });
+catSearch.addEventListener('click', function(e){ e.stopPropagation(); });
+document.addEventListener('click', function(){ catPop.classList.remove('on'); catBtn.setAttribute('aria-expanded','false'); });
+catPop.addEventListener('click', function(e){ e.stopPropagation(); });
+catList.querySelectorAll('.pitem').forEach(function(it){
+  it.addEventListener('click', function(){
+    curCat = it.dataset.cat;
+    document.getElementById('catLabel').textContent = curCat || '全部栏目';
+    catPop.classList.remove('on');
+    catBtn.setAttribute('aria-expanded','false');
+    apply();
+  });
+});
+apply();
+
+function clearFilters(){
+  curCat = ''; curQ = ''; curLv = '';
+  q.value = '';
+  withZero.setAttribute('aria-pressed','false');
+  document.getElementById('catLabel').textContent = '全部栏目';
+  apply();
+}
+document.getElementById('clearAll').addEventListener('click', clearFilters);
+document.getElementById('lvFld').addEventListener('click', function(){
+  curLv = '';
+  withZero.setAttribute('aria-pressed', 'false');
+  apply();
+});
+
+/* 等级筛选（饼 + 表行 + 柱共用） */
+function pickLv(lv){
+  curLv = (curLv === lv) ? '' : lv;
+  if (curLv === '无') withZero.setAttribute('aria-pressed','true');
+  if (!curLv) withZero.setAttribute('aria-pressed','false');
+  apply();
+  document.querySelector('.filters').scrollIntoView({behavior:'smooth', block:'center'});
+}
+document.querySelectorAll('.l2r[data-lv]').forEach(function(r){
+  r.addEventListener('click', function(){ pickLv(r.dataset.lv); });
+  r.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pickLv(r.dataset.lv); } });
+});
+
+/* 饼图与表格行双向联动 */
+var piePaths = Array.prototype.slice.call(document.querySelectorAll('#pie path[data-lv]'));
+function lvRowsAll(){ return Array.prototype.slice.call(document.querySelectorAll('.l2r[data-lv]')); }
+lvRowsAll().forEach(function(r){
+  r.addEventListener('mouseenter', function(){
+    piePaths.forEach(function(p){ p.style.opacity = (p.dataset.lv === r.dataset.lv) ? '1' : '.42'; });
+  });
+  r.addEventListener('mouseleave', function(){ piePaths.forEach(function(p){ p.style.opacity = ''; }); });
+});
+piePaths.forEach(function(p){
+  p.addEventListener('click', function(){ pickLv(p.dataset.lv); });
+  p.addEventListener('mouseenter', function(){
+    lvRowsAll().forEach(function(r){ r.classList.toggle('dim', r.dataset.lv !== p.dataset.lv); });
+  });
+  p.addEventListener('mouseleave', function(){
+    lvRowsAll().forEach(function(r){ r.classList.remove('dim'); });
+  });
+});
+
+/* 栏目柱 → 筛选 */
+document.querySelectorAll('.vcol[data-cat]').forEach(function(g){
+  g.addEventListener('click', function(){
+    curCat = g.dataset.cat;
+    document.getElementById('catLabel').textContent = curCat;
+    apply();
+    document.querySelector('.filters').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+  g.addEventListener('keydown', function(e){
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); g.click(); }
+  });
+});
+
+/* ── 企业明细弹窗 ─────────────────────────── */
+var mask = document.getElementById('mask'),
+    mTitle = document.getElementById('mTitle'), mMeta = document.getElementById('mMeta'),
+    mBody = document.getElementById('mBody'), mPath = document.getElementById('mPath'),
+    mCopy = document.getElementById('mCopy');
+
+function openEnt(k){
+  var co = byId(k); if(!co) return;
+  mTitle.textContent = co.name;
+
+  var cN = srcN(co,'信用中国'), qN = srcN(co,'企查查');
+  var meta = [
+    '信用中国 ' + (cN ? cN + ' 条' : '未发现'),
+    co.noPerm ? '企查查 无权限' : ('企查查 ' + (qN ? qN + ' 条' : '未发现')),
+    '去重后 ' + co.recs.length + ' 条',
+    co.lv === '无' ? '守信红名单' : ('综合 ' + co.lv + '风险'),
+    '演示快照'
+  ];
+  mMeta.innerHTML = meta.map(function(m){
+    return '<span' + (m.indexOf('演示')===0 ? ' style="color:#B45309"' : '') + '>' + m + '</span>';
+  }).join('');
+
+  var html = '';
+  if(!co.recs.length){
+    html += '<div class="m-src"><b>信用中国（0 条）</b><i></i></div>'
+         +  '<div class="m-none">查询成功，未检索到风险记录。</div>'
+         +  '<div class="m-src"><b>企查查（0 条）</b><i></i></div>'
+         +  '<div class="m-none">查询成功，未检索到风险记录。</div>';
+    if(co.positive){
+      html += '<div class="m-pos"><div class="h">正面资质（不计入风险）</div><p>' + co.positive + '</p></div>';
+    }
+    html += '<div class="m-ai"><div class="h">AI 风险摘要</div><p>该企业未发现风险记录，不在本期分析范围内（本期应分析 20 家）。</p></div>';
+  } else {
+    SRC.forEach(function(s){
+      var list = co.recs.filter(function(r){ return r.src.indexOf(s)>-1; });
+      var head = s + '（' + list.length + ' 条）';
+      if(s === '企查查' && co.noPerm) head = '企查查（无权限）';
+      html += '<div class="m-src"><b>' + head + '</b><i></i></div>';
+      if(!list.length){
+        html += '<div class="m-none">' + (s === '企查查' && co.noPerm
+          ? '该账号「经营风险」栏目未开通，此来源不计入，综合等级仅按信用中国数据判定。'
+          : '查询成功，未检索到风险记录。') + '</div>';
+      }
+      list.forEach(function(r){
+        var dual = r.src.length > 1;
+        var tag = '';
+        if(dual) tag = (s === '信用中国') ? '<span class="dual">双源印证</span>' : '<span class="dual">与信用中国重复</span>';
+        html += '<div class="ritem">'
+          + '<div class="t1">' + r.cat
+          + '<span class="pill ' + LV[r.lv].cls + '">' + r.lv + '</span>'
+          + (r.note ? '<span style="font-size:11px;color:var(--text-4);font-weight:400">' + r.note + '</span>' : '')
+          + tag
+          + (r.isNew ? '<span class="new-tag">本期新增</span>' : '')
+          + '<span class="dt">' + r.date + '</span></div>'
+          + '<div class="t2">' + (r.org ? '<span class="org">' + r.org + '</span>　' : '') + r.desc
+          + '<a href="javascript:void 0">详情</a></div>'
+          + '</div>';
+      });
+    });
+    html += '<div class="m-ai"><div class="h">AI 风险摘要</div><p>尚未生成分析。点「生成分析」后将与其余 19 家一并输出。</p></div>';
+  }
+  mBody.innerHTML = html;
+  mPath.textContent = 'data/2026-10-21.xlsx';
+  mCopy.textContent = '复制路径';
+  mask.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeEnt(){ mask.classList.remove('on'); document.body.style.overflow = ''; }
+
+document.getElementById('rows').addEventListener('click', function(e){
+  var tr = e.target.closest('tr[data-ent]');
+  if (tr) openEnt(tr.dataset.ent);
+});
+document.querySelectorAll('.egrow[data-ent]').forEach(function(r){
+  r.addEventListener('click', function(){ openEnt(r.dataset.ent); });
+  r.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openEnt(r.dataset.ent); } });
+});
+document.getElementById('mClose').addEventListener('click', closeEnt);
+document.getElementById('mDone').addEventListener('click', closeEnt);
+mask.addEventListener('click', function(e){ if (e.target === mask) closeEnt(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeEnt(); });
+mCopy.addEventListener('click', function(){
+  mCopy.textContent = '已复制';
+  setTimeout(function(){ mCopy.textContent = '复制路径'; }, 1500);
+});
+</script>
+
+<script>
+(function(){
+  var app=document.querySelector('.app'), btn=document.getElementById('sideToggle');
+  if(!app || !btn) return;
+  document.querySelectorAll('.side .item').forEach(function(it){
+    if(!it.title){ var t=(it.textContent||'').trim(); if(t) it.title=t; }
+  });
+  function setCol(on){
+    app.classList.toggle('collapsed', on);
+    var lbl = on ? '展开侧栏' : '收起侧栏';
+    btn.setAttribute('aria-label', lbl); btn.title = lbl;
+    try{ localStorage.setItem('sideCollapsed', on ? '1' : '0'); }catch(e){}
+  }
+  btn.addEventListener('click', function(){ setCol(!app.classList.contains('collapsed')); });
+  try{ if(localStorage.getItem('sideCollapsed')==='1') setCol(true); }catch(e){}
+})();
+</script>
+
+<script>
+(function(){
+  var b=document.getElementById('btnExport'), t=document.getElementById('toast');
+  if(!b) return;
+  b.addEventListener('click', function(){
+    var foot=(document.getElementById('footCnt')||{}).textContent||'';
+    var n=foot.split('记录 ')[1]||'';
+    t.textContent='已按当前筛选导出 '+(document.getElementById('cnt').textContent)+' 家 · 记录 '+n;
+    t.classList.add('on');
+    clearTimeout(b._t); b._t=setTimeout(function(){ t.classList.remove('on'); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>

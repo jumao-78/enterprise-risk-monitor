@@ -1,0 +1,74 @@
+{
+  "app": {
+    "port": 8765,
+    "data_dir": "./data",
+    "timezone": "Asia/Shanghai",
+    "_note": "数据日期 = 运行时的本地日期，不做跨日换算"
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "port": 3307,
+    "user": "riskmonitor",
+    "password": "<本地 MySQL 口令>",
+    "database": "risk_monitor",
+    "charset": "utf8mb4",
+    "_note": "独立实例，端口 3307；3306 为原有实例（clothing_warehouse），勿混用"
+  },
+  "llm": {
+    "base_url": "https://api.deepseek.com",
+    "api_key": "<在此粘贴 API Key，sk- 开头>",
+    "model": "deepseek-flash",
+    "effort": "high",
+    "max_tokens": 4000,
+    "temperature": 0.3,
+    "timeout_sec": 120,
+    "concurrency": 4,
+    "retry": 2,
+    "_note": "模型 ID 必须是 deepseek-flash。该模型为推理模型，返回同时含 reasoning_content 与 content，业务只取 content；max_tokens 低于 500 时推理会耗尽配额导致 content 为空"
+  },
+  "mail": {
+    "smtp_host": "smtp.qq.com",
+    "smtp_port": 465,
+    "use_ssl": true,
+    "username": "<你的发件邮箱>@qq.com",
+    "password": "<QQ 邮箱 SMTP 授权码，非登录密码>",
+    "sender_name": "企业风险监测系统",
+    "recipients": [
+      "<收件人邮箱>@qq.com"
+    ]
+  },
+  "collector": {
+    "credit_china": {
+      "enabled": true,
+      "headless": true,
+      "timeout_sec": 600,
+      "retry": 3
+    },
+    "qcc": {
+      "enabled": true,
+      "headless": false,
+      "browser_data_dir": "./data/browser_data",
+      "timeout_sec": 600,
+      "retry": 3,
+      "access_note": "该账号无「经营风险」栏目权限：抓取时必须识别并标记为 NO_PERMISSION，严禁判定为「无风险」"
+    }
+  },
+  "risk_rules": {
+    "严重失信": "高",
+    "失信被执行": "高",
+    "破产重整": "高",
+    "吊销注销": "高",
+    "经营异常": "中",
+    "股权冻结": "中",
+    "限制高消费": "中",
+    "税务违法": "中",
+    "行政处罚": "低",
+    "司法案件": "低",
+    "股权出质": "低"
+  },
+  "schedule": {
+    "enabled": true,
+    "time": "05:30",
+    "miss_policy": "不自动补跑，次日首页提示并可手动补"
+  }
+}

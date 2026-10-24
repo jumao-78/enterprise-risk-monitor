@@ -1,0 +1,514 @@
+{
+  "meta": {
+    "dataset_name": "信用中国取数快照（演示用）",
+    "data_mode": "demo",
+    "masked_as_source": "信用中国",
+    "real_sources": [
+      "乌海市信用网 严重失信主体名单（HTTP POST 直采）",
+      "北京市密云区人民政府 黑/红名单公示（HTML 直采）",
+      "信用中国(内蒙古) 失信被执行人名单（页面内容）",
+      "亳州市谯城区 A级守合同重信用公示",
+      "信用中国(江西景德镇) 守信红榜"
+    ],
+    "captured_at": "2026-10-21T19:05:00+08:00",
+    "capture_scripts": [
+      "_batch_query.py",
+      "_fetch_rest.py",
+      "_parse_miyun.py"
+    ],
+    "enterprise_total": 25,
+    "has_risk_total": 20,
+    "no_record_total": 5,
+    "record_total": 22,
+    "notice": "本数据集为真实公示数据的静态快照，用于演示流程；不随日期变化，非实时数据。",
+    "semantic_rule": "红名单(A级纳税人/守合同重信用)属正面资质，不计入风险记录；collect_state=NO_RECORD 表示未检索到风险记录，不等于绝对无风险。",
+    "usage": "取数适配器读取本文件，按企业逐家回放，模拟真实采集过程（延迟 3-8s、进度上报）"
+  },
+  "enterprises": [
+    {
+      "name": "乌海市瑞德农业发展有限公司",
+      "credit_code": "911503026706872789",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-07-24",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "乌海市飞云房地产开发有限责任公司",
+      "credit_code": "911503027014266964",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-07-24",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "内蒙古鑫丰泰医药有限公司",
+      "credit_code": "91150302752584256C",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-07-16",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "乌海市熙泰煤业有限公司",
+      "credit_code": "91150303MA0R76MR7M",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-06-26",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "内蒙古奥立升汽车销售服务有限公司",
+      "credit_code": "911503025612128554",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-06-08",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "内蒙古晶圣新能源科技有限公司",
+      "credit_code": "91150302MAC6295U7N",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-05-26",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "内蒙古蒙诺工程机械有限公司",
+      "credit_code": "91150304MA0MWC6X27",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-05-21",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "乌海市广顺物流有限责任公司",
+      "credit_code": "91150302MACB3GDD80",
+      "collect_state": "HAS_RISK",
+      "record_count": 3,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-09-17",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        },
+        {
+          "seq": 2,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-09-16",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        },
+        {
+          "seq": 3,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-04-29",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "乌海市东宁置业有限公司",
+      "credit_code": "91150302692872159E",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-04-23",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "内蒙古中保物业服务有限责任公司",
+      "credit_code": "91150302552801893N",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-03-31",
+          "agency": "最高法",
+          "content": "",
+          "link": "",
+          "source": "乌海市信用网",
+          "source_page": "https://fgw.wuhai.gov.cn/xywh/blackList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "HTTP POST keyword 查询直采"
+    },
+    {
+      "name": "北京皓宇垚节能环保设备有限公司",
+      "credit_code": "91110228318047722J",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人名单",
+          "occur_date": "",
+          "agency": "",
+          "content": "北京市密云区黑名单公示（页面未列列入日期）",
+          "link": "",
+          "source": "北京市密云区人民政府-黑名单查询",
+          "source_page": "https://www.bjmy.gov.cn/zwgk/ztbd/xymy/lhjc/hhmdcx/hmdcx0/index_14.html"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页直采，字段仅含名称/代码/名单类型"
+    },
+    {
+      "name": "北京金碧伟业印刷有限公司",
+      "credit_code": "91110228103010121U",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人名单",
+          "occur_date": "",
+          "agency": "",
+          "content": "北京市密云区黑名单公示（页面未列列入日期）",
+          "link": "",
+          "source": "北京市密云区人民政府-黑名单查询",
+          "source_page": "https://www.bjmy.gov.cn/zwgk/ztbd/xymy/lhjc/hhmdcx/hmdcx0/index_14.html"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页直采，字段仅含名称/代码/名单类型"
+    },
+    {
+      "name": "北京盛杰伟业装饰有限公司",
+      "credit_code": "91110228661552582Y",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人名单",
+          "occur_date": "",
+          "agency": "",
+          "content": "北京市密云区黑名单公示（页面未列列入日期）",
+          "link": "",
+          "source": "北京市密云区人民政府-黑名单查询",
+          "source_page": "https://www.bjmy.gov.cn/zwgk/ztbd/xymy/lhjc/hhmdcx/hmdcx0/index_14.html"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页直采，字段仅含名称/代码/名单类型"
+    },
+    {
+      "name": "北京绿润食品有限公司",
+      "credit_code": "911102287526271801",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人名单",
+          "occur_date": "",
+          "agency": "",
+          "content": "北京市密云区黑名单公示（页面未列列入日期）",
+          "link": "",
+          "source": "北京市密云区人民政府-黑名单查询",
+          "source_page": "https://www.bjmy.gov.cn/zwgk/ztbd/xymy/lhjc/hhmdcx/hmdcx0/index_14.html"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页直采，字段仅含名称/代码/名单类型"
+    },
+    {
+      "name": "北京中昌建设劳务有限公司",
+      "credit_code": "9111022809717767XP",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人名单",
+          "occur_date": "",
+          "agency": "",
+          "content": "北京市密云区黑名单公示（页面未列列入日期）",
+          "link": "",
+          "source": "北京市密云区人民政府-黑名单查询",
+          "source_page": "https://www.bjmy.gov.cn/zwgk/ztbd/xymy/lhjc/hhmdcx/hmdcx0/index_14.html"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页直采，字段仅含名称/代码/名单类型"
+    },
+    {
+      "name": "安徽仁伟建筑工程有限公司河南第一分公司",
+      "credit_code": "91410105MA9K40C26K",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-10-09",
+          "agency": "南乐县人民法院",
+          "content": "",
+          "link": "",
+          "source": "信用中国(内蒙古)-失信被执行人名单",
+          "source_page": "https://fgw.nmg.gov.cn/xynmg/creditChinaLhjcSearchList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页内容（经搜索引擎抓取）"
+    },
+    {
+      "name": "四川上里人和农业开发有限公司",
+      "credit_code": "91511802MAC7N5WE2D",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-10-09",
+          "agency": "雅安市雨城区人民法院",
+          "content": "",
+          "link": "",
+          "source": "信用中国(内蒙古)-失信被执行人名单",
+          "source_page": "https://fgw.nmg.gov.cn/xynmg/creditChinaLhjcSearchList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页内容（经搜索引擎抓取）"
+    },
+    {
+      "name": "丽水市正道电力科技有限公司",
+      "credit_code": "91331102MA2E1BB338",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-10-09",
+          "agency": "东乡县人民法院",
+          "content": "",
+          "link": "",
+          "source": "信用中国(内蒙古)-失信被执行人名单",
+          "source_page": "https://fgw.nmg.gov.cn/xynmg/creditChinaLhjcSearchList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页内容（经搜索引擎抓取）"
+    },
+    {
+      "name": "广州艾士弘机电安装工程有限公司",
+      "credit_code": "91440115MABWLX1W96",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-10-09",
+          "agency": "广州市南沙区人民法院",
+          "content": "",
+          "link": "",
+          "source": "信用中国(内蒙古)-失信被执行人名单",
+          "source_page": "https://fgw.nmg.gov.cn/xynmg/creditChinaLhjcSearchList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页内容（经搜索引擎抓取）"
+    },
+    {
+      "name": "紫云自治县翔宇房地产开发有限公司",
+      "credit_code": "91520425082794907K",
+      "collect_state": "HAS_RISK",
+      "record_count": 1,
+      "records": [
+        {
+          "seq": 1,
+          "risk_type_raw": "失信被执行人",
+          "occur_date": "2026-10-09",
+          "agency": "紫云苗族布依族自治县人民法院",
+          "content": "",
+          "link": "",
+          "source": "信用中国(内蒙古)-失信被执行人名单",
+          "source_page": "https://fgw.nmg.gov.cn/xynmg/creditChinaLhjcSearchList.jspx"
+        }
+      ],
+      "positive_info": null,
+      "collect_note": "公示页内容（经搜索引擎抓取）"
+    },
+    {
+      "name": "北京尚华伟业科技有限公司",
+      "credit_code": "91110228062780540L",
+      "collect_state": "NO_RECORD",
+      "record_count": 0,
+      "records": [],
+      "positive_info": {
+        "kind": "A级纳税人",
+        "agency": "北京市密云区经信局",
+        "date": "2026-06-11"
+      },
+      "collect_note": "守信红名单企业，无失信风险记录；正面资质单独标注，不计入风险记录"
+    },
+    {
+      "name": "北京碧海怡景园林绿化有限公司",
+      "credit_code": "91110113748822098C",
+      "collect_state": "NO_RECORD",
+      "record_count": 0,
+      "records": [],
+      "positive_info": {
+        "kind": "A级纳税人",
+        "agency": "北京市密云区经信局",
+        "date": "2026-06-11"
+      },
+      "collect_note": "守信红名单企业，无失信风险记录；正面资质单独标注，不计入风险记录"
+    },
+    {
+      "name": "中建电子信息技术有限公司",
+      "credit_code": "91110108100018355R",
+      "collect_state": "NO_RECORD",
+      "record_count": 0,
+      "records": [],
+      "positive_info": {
+        "kind": "A级纳税人",
+        "agency": "北京市密云区经信局",
+        "date": "2026-06-11"
+      },
+      "collect_note": "守信红名单企业，无失信风险记录；正面资质单独标注，不计入风险记录"
+    },
+    {
+      "name": "安徽福榕药业有限公司",
+      "credit_code": "91341600MA2WAUDW0J",
+      "collect_state": "NO_RECORD",
+      "record_count": 0,
+      "records": [],
+      "positive_info": {
+        "kind": "A级守合同重信用",
+        "agency": "亳州市谯城区市场监管局",
+        "date": "2026-08-18"
+      },
+      "collect_note": "守信红名单企业，无失信风险记录；正面资质单独标注，不计入风险记录"
+    },
+    {
+      "name": "景德镇琢器陶瓷有限公司",
+      "credit_code": "91360203MA388HBA15",
+      "collect_state": "NO_RECORD",
+      "record_count": 0,
+      "records": [],
+      "positive_info": {
+        "kind": "A级纳税人",
+        "agency": "景德镇市税务局",
+        "date": "2026-04-30"
+      },
+      "collect_note": "守信红名单企业，无失信风险记录；正面资质单独标注，不计入风险记录"
+    }
+  ]
+}
